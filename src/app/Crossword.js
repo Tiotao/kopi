@@ -34,6 +34,17 @@ class Crossword {
 		return this.horizontalEntries;
 	}
 
+	getHorizontalEntry(index){
+		var returnVal;
+		if(index == '*'){
+			returnVal = this.horizontalEntries[index]
+		} else {
+			returnVal = false;
+		}
+
+		return returnVal;
+	}
+
 	getVerticalEntries(){
 		return this.verticalEntries;
 	}
@@ -47,12 +58,16 @@ class Crossword {
 		}
 		let map = this.map;
 		let spaceRefs = entry.getSpaceRefs();
-		return _.every(spaceRefs, v => map.getSpace(v.getPosition()).isCorrect());
+		for (var i = spaceRefs.length - 1; i >= 0; i--) {
+			if(!map.getSpace(spaceRefs[i].getPosition()).isCorrect()){
+				return false;
+			}
+		};
+		return true;
 	}
 
 	fillSpace(position, value){
 		this.map.getSpace(position).setValue(value);
-		console.log(this.map.getSpace(position))
 	}
 
 	getMap(){
@@ -163,6 +178,7 @@ class Entry {
 		this.size = answer.length;
 		this.type = type;
 		this.spaceRefs = []
+		this.isCorrect = false;
 		// same length as size
 		this.answer = answer;
 	}
@@ -207,7 +223,7 @@ class Space {
 		this.entryIndexes[entryType] = entryIndex;
 	}
 
-	getEntryIndexes(entryIndexes){
+	getEntryIndexes(){
 		return this.entryIndexes;
 	}
 
@@ -239,6 +255,7 @@ class Space {
 	setValue(value){
 		this.value = value;
 	}
+
 
 }
 

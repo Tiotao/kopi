@@ -1,3 +1,5 @@
+
+
 export class MainController {
   constructor ($timeout, webDevTec, toastr) {
     'ngInject';
@@ -9,11 +11,39 @@ export class MainController {
     this.activate($timeout, webDevTec);
     this.crossword = this.initCrossword();
     console.log(this.crossword);
+    
+    // let horizontalEntries = this.crossword.getHorizontalEntries();
+    // let verticalEntries = this.crossword.getVerticalEntries();
+    // let scope = this
+    // const HORIZONTAL_ENTRY = 0, VERTICAL_ENTRY = 1;
+
+    // _.each(horizontalEntries, function(entry, index){
+    //   let spaceRefList = entry.getSpaceRefs();
+    //   let entryIndex = index;
+    //   _.each(spaceRefList, function(ref){
+    //     scope.$watch(function(){
+    //       return ref
+    //     }, function(newValue, oldValue){
+    //       console.log("horizontal-" + entryIndex + ":" + crossword.isEntryCorrect(HORIZONTAL_ENTRY, entryIndex))
+    //     })
+    //   })
+    // })
+
+    // _.each(verticalEntries, function(entry, index){
+    //   let spaceRefList = entry.getSpaceRefs();
+    //   let entryIndex = index;
+    //   _.each(spaceRefList, function(ref){
+    //     scope.$watch(function(){
+    //       return ref
+    //     }, function(newValue, oldValue){
+    //       console.log("vertical-" + entryIndex + ":" + crossword.isEntryCorrect(VERTICAL_ENTRY, entryIndex))
+    //     })
+    //   })
+    // })
   }
 
   initCrossword(){
-    const HORIZONTAL_ENTRY = 0, 
-          VERTICAL_ENTRY = 1;
+    
 
     function Sr(x, y){
       return new SpaceReference(x, y);
@@ -115,8 +145,8 @@ export class MainController {
     e12.setSpaceRefs([r1c10, r2c10, r3c10, r4c10, r5c10, r6c10, r7c10]);
     e13.setSpaceRefs([r7c11, r8c11, r9c11]);
 
-    crossword.setVerticalEntries([e1, e2, e3, e4, e5, e6]);
-    crossword.setHorizontalEntries([e8, e9, e10, e11, e12, e13]);
+    crossword.setHorizontalEntries([e1, e2, e3, e4, e5, e6, e7]);
+    crossword.setVerticalEntries([e8, e9, e10, e11, e12, e13]);
 
     return crossword;
   }
@@ -126,9 +156,7 @@ export class MainController {
     $timeout(() => {
       this.classAnimation = 'rubberBand';
     }, 4000);
-  }
-
-  
+  } 
 
   getWebDevTec(webDevTec) {
     this.awesomeThings = webDevTec.getTec();
@@ -136,6 +164,32 @@ export class MainController {
     angular.forEach(this.awesomeThings, (awesomeThing) => {
       awesomeThing.rank = Math.random();
     });
+  }
+
+  isEntryCorrect(entryIndexes){
+    // console.log('fire')
+    let horizontalIndex = entryIndexes[0];
+    let verticalIndex = entryIndexes[1];
+    const HORIZONTAL_ENTRY = 0, VERTICAL_ENTRY = 1;
+    let result = [false, false];
+
+    if (horizontalIndex !== '*'){
+      if (this.crossword.isEntryCorrect(HORIZONTAL_ENTRY, horizontalIndex)) {
+        result[0] = true;
+      } else {
+        result[0] = false;
+      }
+    }
+
+    if (verticalIndex !== '*') {
+      // console.log("vertical-" + verticalIndex + ":" + this.crossword.isEntryCorrect(VERTICAL_ENTRY, verticalIndex))
+      if (this.crossword.isEntryCorrect(VERTICAL_ENTRY, verticalIndex)) {
+        result[1] = true;
+      } else {
+        result[1] = false;
+      }
+    }
+    return result;
   }
 
   showToastr() {
